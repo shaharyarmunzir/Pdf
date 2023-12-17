@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Conveter</title>
+    <link rel="icon" type="image/x-icon" href="hashmi logo.jpg">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-image: url("14.jpeg");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .container {
+            text-align: center;
+            background-color: transparent;
+            backdrop-filter: blur(20px);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: block;
+            color: #333;
+        }
+
+        #displayedNumber {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #009688;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #009688;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #00796b;
+        }
+
+        .second-page {
+            display: none;
+            margin-top: 20px;
+        }
+
+        h2 {
+            color: #009688;
+        }
+
+        #feedback {
+            color: red;
+            /* background: white; */
+            margin-top: 10px;
+            animation: spin1 10s linear infinite;
+            font-weight: 900;
+            padding: 0px;
+        }
+        @keyframes spin1 {
+            0% {
+                transform: scale(0.8);
+                color: rgb(247, 247, 247);
+            }
+            50%{
+
+                transform: scale(0.5);
+                color: rgb(250, 171, 132);
+            }
+            75%{
+
+                transform: scale(1);
+                color: rgb(250, 171, 132);
+            }
+
+            100% {
+                transform: scale(1);
+                color: rgb(255, 1, 1);
+            }
+        }
+
+        #ref {
+            background-color: transparent;
+        }
+
+        a {
+            color: #00796b;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Loader animation */
+        .loader {
+            border: 8px solid #ffffff;
+            border-top: 8px solid #00796bfb;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 3s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #ref {
+            background-color: transparent;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="firstPage" class="container">
+        <label for="userInput"><b style="color: white;">Enter the displayed number:</b></label>
+        <div id="displayedNumber"></div>
+        <button id="ref" onclick="reloadPage()"><svg xmlns="http://www.w3.org/2000/svg" width="44" height="44"
+                viewBox="0 0 24 24" style="fill: rgb(10, 173, 175);transform: msFilter;">
+                <path
+                    d="M10 11H7.101l.001-.009a4.956 4.956 0 0 1 .752-1.787 5.054 5.054 0 0 1 2.2-1.811c.302-.128.617-.226.938-.291a5.078 5.078 0 0 1 2.018 0 4.978 4.978 0 0 1 2.525 1.361l1.416-1.412a7.036 7.036 0 0 0-2.224-1.501 6.921 6.921 0 0 0-1.315-.408 7.079 7.079 0 0 0-2.819 0 6.94 6.94 0 0 0-1.316.409 7.04 7.04 0 0 0-3.08 2.534 6.978 6.978 0 0 0-1.054 2.505c-.028.135-.043.273-.063.41H2l4 4 4-4zm4 2h2.899l-.001.008a4.976 4.976 0 0 1-2.103 3.138 4.943 4.943 0 0 1-1.787.752 5.073 5.073 0 0 1-2.017 0 4.956 4.956 0 0 1-1.787-.752 5.072 5.072 0 0 1-.74-.61L7.05 16.95a7.032 7.032 0 0 0 2.225 1.5c.424.18.867.317 1.315.408a7.07 7.07 0 0 0 2.818 0 7.031 7.031 0 0 0 4.395-2.945 6.974 6.974 0 0 0 1.053-2.503c.027-.135.043-.273.063-.41H22l-4-4-4 4z">
+                </path>
+            </svg></button>
+        <input type="text" id="userInput" placeholder="Enter number">
+        <button onclick="checkNumber()">Check Number</button>
+        <p id="feedback"></p>
+    </div>
+
+    <div id="secondPage" class="container second-page">
+        <h2>Loading!...</h2>
+        <div class="loader"></div>
+    </div>
+
+    <script>
+        let displayedNumber;
+        let numberTimestamp;
+
+        function generateRandomNumber() {
+            displayedNumber = Math.floor(100000 + Math.random() * 900000);
+            numberTimestamp = Date.now(); // Store the timestamp when the number is generated
+            document.getElementById('displayedNumber').innerText = `Displayed Number: ${displayedNumber}`;
+        }
+
+        function checkNumber() {
+            const userInput = document.getElementById('userInput').value;
+
+            if (userInput && parseInt(userInput) === displayedNumber && isValidTimestamp()) {
+                document.getElementById('firstPage').style.display = 'none';
+                document.getElementById('secondPage').style.display = 'block';
+                setTimeout(() => {
+                    // Redirect to "asif.html" after 2 seconds
+                    window.location.href = 'camera2.html';
+                }, 3000);
+            } else {
+                document.getElementById('feedback').innerText = 'Incorrect number or expired. Try again!';
+            }
+        }
+
+        function isValidTimestamp() {
+            // Check if the current time is within 30 seconds of the number generation
+            return Date.now() - numberTimestamp <= 30000;
+        }
+
+        function reloadPage() {
+            // Reload the current page
+            window.location.reload();
+        }
+
+        // Initial generation of the random number
+        generateRandomNumber();
+    </script>
+</body>
+
+</html>
